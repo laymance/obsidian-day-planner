@@ -77,7 +77,7 @@ export default class Parser {
 
         // Sort the items by time
         results = results.sort(function(planItemA, planItemB) {
-            return planItemA.time.valueOf() - planItemB.time.valueOf();
+            return planItemA.startTime.valueOf() - planItemB.startTime.valueOf();
         });
 
         return results;

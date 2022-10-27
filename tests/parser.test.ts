@@ -77,7 +77,7 @@ describe('parser', () => {
     expect(ninethItem.isBreak).to.be.false;
     expect(ninethItem.isEnd).to.be.false;
     expect(ninethItem.endTime).to.not.be.undefined;
-    expect(ninethItem.rawStartTime).to.eql('11:50');
+    expect(ninethItem.rawStartTime).to.eql('11:55');
     expect(ninethItem.rawEndTime).to.eql('11:59');
     expect(ninethItem.text).to.eql('check email');
 
@@ -111,7 +111,6 @@ describe('parser', () => {
     // Remove fields that won't match
     function removeKeys (item: PlanItem) {
       delete item['matchIndex'];
-      delete item['time'];
       return item;
     }
 
