@@ -34,7 +34,7 @@ export default class Parser {
     }
 
     private transform(regexMatches: {index: number, value: RegExpExecArray}[]): PlanItem[]{
-        const results = regexMatches.map((match) => {
+        let results = regexMatches.map((match) => {
             try {
                 const value = match.value;
                 const isCompleted = this.matchValue(value.groups.completion, 'x');
@@ -59,6 +59,12 @@ export default class Parser {
                 console.log(error);
             }
         });
+
+        // Sort the items by time
+        results = results.sort(function(planItemA, planItemB) {
+            return planItemA.time.valueOf() - planItemB.time.valueOf();
+        });
+
         return results;
     }
 
