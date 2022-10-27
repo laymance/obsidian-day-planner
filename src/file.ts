@@ -17,9 +17,12 @@ export default class DayPlannerFile {
         this.noteForDateQuery = new NoteForDateQuery();
     }
 
-
     hasTodayNote(): boolean {
         return this.settings.mode === DayPlannerMode.File || this.noteForDateQuery.exists(this.settings.notesToDates);
+    }
+
+    hasTomorrowNote(): boolean {
+        return this.settings.mode === DayPlannerMode.File || this.noteForDateQuery.existsTomorrow(this.settings.notesToDates);
     }
 
     todayPlannerFilePath(): string {
@@ -30,8 +33,20 @@ export default class DayPlannerFile {
         return `${this.settings.customFolder ?? 'Day Planners'}/${fileName}`;
     }
 
+    tomorrowPlannerFilePath(): string {
+        if(this.settings.mode === DayPlannerMode.Command){
+            return this.noteForDateQuery.activeTomorrow(this.settings.notesToDates).notePath;
+        }
+        const fileName = this.tomorrowPlannerFileName();
+        return `${this.settings.customFolder ?? 'Day Planners'}/${fileName}`;
+    }
+
     todayPlannerFileName(): string {
         return this.momentDateRegex.replace(DAY_PLANNER_FILENAME);
+    }
+
+    tomorrowPlannerFileName(): string {
+        return this.momentDateRegex.replaceForTomorrow(DAY_PLANNER_FILENAME);
     }
 
     async prepareFile() {
@@ -39,6 +54,9 @@ export default class DayPlannerFile {
             if(this.settings.mode === DayPlannerMode.File){      
                 await this.createFolderIfNotExists(this.settings.customFolder);
                 await this.createFileIfNotExists(this.todayPlannerFilePath());
+                if (this.settings.createNextDayPlanner) {
+                    await this.createFileIfNotExists(this.tomorrowPlannerFilePath());
+                }
             }
         } catch (error) {
             console.log(error)
